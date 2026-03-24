@@ -47,13 +47,33 @@ ESP
 CONSTRAINTS
 - Table-based, inline styles, no comments, no blank lines
 - Desktop only; no media queries
-- MSO conditional buttons required
+- MSO conditional buttons required only OUTSIDE VML context (header, footer)
 - Hidden preheader with zero-width non-joiner
 - Images: explicit width, height:auto, display:block
-- Head <style> block must begin with these exact Outlook resets (before any other rules):
+- <body> must have both bgcolor attribute and style background-color: <body bgcolor="#XXXXXX" style="background-color:#XXXXXX;">
+- Head <style> block must begin with these exact rules (before any other rules):
+  :root{color-scheme:light;}
   body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
   table,td{mso-table-lspace:0pt;mso-table-rspace:0pt;}
   img{-ms-interpolation-mode:bicubic;border:0;height:auto;line-height:100%;outline:none;text-decoration:none;}
+- Add after X-UA-Compatible meta, before <title>:
+  <meta name="color-scheme" content="light"/>
+  <meta name="supported-color-schemes" content="light"/>
+
+VML HERO BACKGROUND (if email has a hero with background image):
+- VML opening: <v:textbox inset="0,0,0,0"> — no style attribute, no inner <div> wrapper
+  CORRECT:   <v:textbox inset="0,0,0,0"><![endif]-->
+  INCORRECT: <v:textbox style="mso-fit-shape-to-text:false" inset="0,0,0,0"><div style="..."><![endif]-->
+- VML closing: </v:textbox></v:rect> — no </div>
+  CORRECT:   <!--[if gte mso 9]></v:textbox></v:rect><![endif]-->
+  INCORRECT: <!--[if gte mso 9]></div></v:textbox></v:rect><![endif]-->
+- Hero CTA button inside VML: use plain unconditional table button (NO <!--[if mso]> inside VML)
+  Nested conditional comments inside <!--[if gte mso 9]> cause blank emails at 120 DPI in Outlook 2021+
+  CORRECT inside VML hero:
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center"><tr>
+    <td align="center" bgcolor="#COLOR" style="background-color:#COLOR;border-radius:4px;mso-padding-alt:0;">
+    <a href="[URL]" style="...;mso-padding-alt:12px 24px;">BUTTON TEXT</a></td></tr></table>
+- Add bgcolor="#XXXXXX" to the <td> wrapping the VML hero to prevent image bleed below VML rect
 
 OUTPUT
 - Open email-[campaign]-[client].html immediately
