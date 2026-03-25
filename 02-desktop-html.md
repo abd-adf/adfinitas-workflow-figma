@@ -29,11 +29,6 @@ INPUT
 - Read figma-context-[CAMPAIGN].md
 - Do NOT use Figma MCP
 
-OPTIONAL TEMPLATE
-- If template.html exists, use it as the structural base
-- Preserve its HTML architecture, classes, and MSO patterns
-- Update content and tokens to match figma-context-[CAMPAIGN].md
-
 LINKS
 - Main CTA base URL: [CTA-URL]
 - UTM: ?utm_source=email&utm_medium=email&utm_campaign=[CAMPAIGN-NAME]&utm_content=[button-name-slug]
@@ -90,14 +85,6 @@ OUTLOOK CONSTRAINTS:
 - When desktop and mobile variants of the same image coexist (hero, CTA buttons):
   desktop image → plain <img> with class="desktop-only"
   mobile image  → <img> with class="mobile-only" wrapped in <!--[if !mso]><!--> ... <!--<![endif]-->
-  CORRECT:
-    <img src="btn-desktop.png" width="259" height="52" class="desktop-only" style="display:block;..."/>
-    <!--[if !mso]><!-->
-    <img src="btn-mobile.png" width="188" height="39" class="mobile-only" style="display:none;..."/>
-    <!--<![endif]-->
-  INCORRECT (Outlook shows both):
-    <img src="btn-desktop.png" class="desktop-only" style="display:block;..."/>
-    <img src="btn-mobile.png" class="mobile-only" style="display:none;..."/>
 
 VML HERO BACKGROUND (if email has a hero with background image):
 - VML opening: <v:textbox inset="0,0,0,0"> — no style attribute, no inner <div> wrapper
