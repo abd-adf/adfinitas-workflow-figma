@@ -89,13 +89,18 @@ One row per unique URL — deduplicate shared assets.
 If the same URL appears in multiple sections, keep one row
 and add a note: (also used in: [section]).
 
-| # | Layer name | Figma URL | Width | Height | Section |
-|---|---|---|---|---|---|
-| 1 | component/logo | https://... | 150px | 150px | header |
-| 2 | section/hero | https://... | 600px | 700px | hero |
+| # | Layer name | Figma URL | Width | Height | Section | Variant |
+|---|---|---|---|---|---|---|
+| 1 | component/logo | https://... | 150px | 150px | header | — |
+| 2 | section/hero-desktop | https://... | 600px | 609px | hero | desktop |
+| 3 | section/hero-mobile | https://... | 375px | 455px | hero | mobile |
 
 Notes:
 - Record exact rendered dimensions, not intrinsic component size.
+- Hero images: capture desktop and mobile as two separate rows with explicit pixel dimensions.
+  These will be implemented as plain <img> tags (never VML background) — see Prompt 2.
+- CTA button images: if the design uses distinct desktop and mobile button images,
+  capture both as separate rows and mark variant accordingly.
 - All Figma URLs expire in 7 days — replace via Prompt 4.
 
 RULES

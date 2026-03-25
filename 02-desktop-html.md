@@ -49,8 +49,9 @@ CONSTRAINTS
 - Desktop only; no media queries
 - MSO conditional buttons required only OUTSIDE VML context (header, footer)
 - Hidden preheader with zero-width non-joiner
-- Images: explicit width, height:auto, display:block
+- Images: explicit width AND height attributes matching the actual CDN image dimensions, height:auto in style, display:block
 - <body> must have both bgcolor attribute and style background-color: <body bgcolor="#XXXXXX" style="background-color:#XXXXXX;">
+- Outer full-width <td> must have explicit bgcolor: <td align="center" bgcolor="#XXXXXX" style="background-color:#XXXXXX;">
 - Head <style> block must begin with these exact rules (before any other rules):
   :root{color-scheme:light;}
   body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
@@ -59,6 +60,44 @@ CONSTRAINTS
 - Add after X-UA-Compatible meta, before <title>:
   <meta name="color-scheme" content="light"/>
   <meta name="supported-color-schemes" content="light"/>
+
+HERO — REQUIRED PATTERN (image tag, never VML background):
+The hero must always be implemented as a plain <img> tag — never as a VML background image.
+Use separate desktop and mobile image files. The desktop image is always present; the mobile image
+is wrapped in MSO conditional comments so Outlook never sees it:
+
+  <td align="center" style="padding:0;">
+    <a href="[CTA-URL]..." target="_blank">
+      <img src="[CDN-DESKTOP-HERO]" width="600" height="[H]" class="desktop-only"
+           style="display:block;width:600px;height:auto;border:0;" alt="[ALT]"/>
+      <!--[if !mso]><!-->
+      <img src="[CDN-MOBILE-HERO]" width="[W]" height="[H]" class="mobile-only"
+           style="display:none;width:100%;height:auto;border:0;" alt="[ALT]"/>
+      <!--<![endif]-->
+    </a>
+  </td>
+
+The base CSS must declare:
+  .mobile-only{display:none;}
+  .desktop-only{display:block;}
+
+OUTLOOK CONSTRAINTS:
+- Never put border-radius on <table> elements — Outlook collapses the border into a rectangle.
+  border-radius is only valid on <td> and <a> elements.
+- Never rely on CSS class-based display:none to hide content from Outlook.
+  Outlook ignores <style> block rules. For any element that must be hidden in Outlook
+  (mobile images, mobile-only layout), wrap it in <!--[if !mso]><!--> ... <!--<![endif]-->.
+- When desktop and mobile variants of the same image coexist (hero, CTA buttons):
+  desktop image → plain <img> with class="desktop-only"
+  mobile image  → <img> with class="mobile-only" wrapped in <!--[if !mso]><!--> ... <!--<![endif]-->
+  CORRECT:
+    <img src="btn-desktop.png" width="259" height="52" class="desktop-only" style="display:block;..."/>
+    <!--[if !mso]><!-->
+    <img src="btn-mobile.png" width="188" height="39" class="mobile-only" style="display:none;..."/>
+    <!--<![endif]-->
+  INCORRECT (Outlook shows both):
+    <img src="btn-desktop.png" class="desktop-only" style="display:block;..."/>
+    <img src="btn-mobile.png" class="mobile-only" style="display:none;..."/>
 
 VML HERO BACKGROUND (if email has a hero with background image):
 - VML opening: <v:textbox inset="0,0,0,0"> — no style attribute, no inner <div> wrapper

@@ -21,6 +21,8 @@ CHANGES
    Examples: mobile-full, mobile-hide, mobile-stack, mobile-center, mobile-text-sm
 
 2. Add one <style> block before </head> containing:
+   .mobile-only{display:none;}
+   .desktop-only{display:block;}
    @media screen and (max-width: 620px) {
      /* mobile overrides */
    }
@@ -34,6 +36,15 @@ CHANGES
    - side padding reduced to 20px
    - width:100%!important for full-bleed 600px tables
 
+4. For desktop/mobile image pairs (hero, CTA buttons), apply this pattern in @media:
+   .desktop-only{display:none!important;}
+   .mobile-only{display:block!important;width:100%!important;height:auto!important;}
+
+   The desktop image is always present as a plain <img>.
+   The mobile image must already be wrapped in <!--[if !mso]><!--> ... <!--<![endif]-->
+   (applied in Prompt 2) so Outlook never renders it regardless of CSS.
+   Do not remove those conditional comments — they are required for Outlook.
+
 CONSTRAINTS
 - Edit email-[campaign]-[client].html in place
 - Do not create a new file
@@ -42,6 +53,11 @@ CONSTRAINTS
 - Only add classes and the media-query block
 - No comments
 - No blank lines
+- Never use border-radius on <table> elements — Outlook collapses it.
+  border-radius is valid only on <td> and <a>.
+- Never rely on CSS class rules alone to hide content from Outlook.
+  Mobile-only content must be excluded via <!--[if !mso]><!--> conditional comments,
+  not just via display:none in the <style> block.
 
 RETURN
 ✓ responsive added — [number] rules

@@ -31,12 +31,20 @@ You have access to the Figma file via MCP.
 STEP 1 — BUILD IMAGE MAP
 Before downloading anything, write image-map.json:
 {
-  "figma_url_1": "[PROJECT-SLUG]-hero-background.jpg",
-  "figma_url_2": "[PROJECT-SLUG]-card-80.jpg",
+  "figma_url_1": "[PROJECT-SLUG]-hero-desktop.png",
+  "figma_url_2": "[PROJECT-SLUG]-hero-mobile.png",
+  "figma_url_3": "[PROJECT-SLUG]-button-desktop.png",
+  "figma_url_4": "[PROJECT-SLUG]-button-mobile.png",
   ...
 }
 Apply naming convention:
-[PROJECT-SLUG]-[section]-[description].[ext]
+[PROJECT-SLUG]-[section]-[variant].[ext]
+
+Hero and CTA button images must be exported as two separate files (desktop + mobile).
+After replacing URLs in HTML, verify that:
+- desktop hero img: width attribute = image natural width (e.g. 600), style="width:600px"
+- mobile hero img: wrapped in <!--[if !mso]><!--> ... <!--<![endif]-->, style="width:100%"
+- same pattern applies to desktop/mobile CTA button image pairs
 
 STEP 2 — EXPORT ASSETS
 Export each image from the Figma file using the Figma URL from image-map.json.
