@@ -3,8 +3,6 @@
 ## Ce que ça fait
 Génère l'email HTML table-based complet en version desktop uniquement, en lisant le fichier `figma-context-[CAMPAIGN].md` local. Zéro appel Figma MCP.
 
-> ⚠️ Nommer le fichier de sortie explicitement dans le prompt. Un placeholder a causé des confusions de nom de fichier par le passé (`TEMPLATE_email-[wrong-name].html`).
-
 ## Variables à remplacer
 
 | Variable | Quoi renseigner |
@@ -32,11 +30,6 @@ INPUT
 - Read figma-context-[CAMPAIGN].md
 - Do NOT use Figma MCP
 
-OPTIONAL TEMPLATE
-- If template.html exists, use it as the structural base
-- Preserve its HTML architecture, classes, and MSO patterns
-- Update content and tokens to match figma-context-[CAMPAIGN].md
-
 LINKS
 - Main CTA base URL: [CTA-URL]
 - UTM: ?utm_source=email&utm_medium=email&utm_campaign=[CAMPAIGN-NAME]&utm_content=[button-name-slug]
@@ -55,6 +48,8 @@ CONSTRAINTS
 - Images: explicit width AND height attributes matching the actual CDN image dimensions, height:auto in style, display:block
 - <body> must have both bgcolor attribute and style background-color: <body bgcolor="#XXXXXX" style="background-color:#XXXXXX;">
 - Outer full-width <td> must have explicit bgcolor: <td align="center" bgcolor="#XXXXXX" style="background-color:#XXXXXX;">
+- Do NOT include <link> tags for web fonts
+  Declare web fonts in font-family as first value with system fallbacks only.
 - Head <style> block must begin with these exact rules (before any other rules):
   :root{color-scheme:light;}
   body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
@@ -87,6 +82,8 @@ The base CSS must declare:
 OUTLOOK CONSTRAINTS:
 - Never put border-radius on <table> elements — Outlook collapses the border into a rectangle.
   border-radius is only valid on <td> and <a> elements.
+- Never apply border-radius to <img> elements — Outlook ignores it.
+  Round corners on images must be baked into the exported asset.
 - Never rely on CSS class-based display:none to hide content from Outlook.
   Outlook ignores <style> block rules. For any element that must be hidden in Outlook
   (mobile images, mobile-only layout), wrap it in <!--[if !mso]><!--> ... <!--<![endif]-->.
